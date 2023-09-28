@@ -5,27 +5,58 @@ import {Link} from 'react-router-dom';
 
 function ListAssignment(props) {
 
-  const [assignments, setAssignments] = useState([]);
-  const [message, setMessage] = useState('');
+    const [assignments, setAssignments] = useState([]);
+    const [message, setMessage] = useState('');
 
-  useEffect(() => {
-   // called once after intial render
-   fetchAssignments();
-  }, [] )
- 
-  const fetchAssignments = () => {
-    console.log("fetchAssignments");
-    fetch(`${SERVER_URL}/assignment`)
-    .then((response) => response.json() ) 
-    .then((data) => { 
-      console.log("assignment length "+data.length);
-      setAssignments(data);
-     }) 
-    .catch(err => console.error(err)); 
-  }
+    useEffect(() => {
+    // called once after intial render
+    fetchAssignments();
+    }, [] )
   
+    const fetchAssignments = () => {
+      console.log("fetchAssignments");
+      fetch(`${SERVER_URL}/assignment`)
+      .then((response) => response.json() ) 
+      .then((data) => { 
+        console.log("assignment length "+data.length);
+        setAssignments(data);
+      }) 
+      .catch(err => console.error(err)); 
+    }
+
+    const handleDelete = (idx) => {
+      console.log("handleDelete "+idx);
+      fetch(`${SERVER_URL}/assignment/${idx}`,
+        { method: 'DELETE'})
+      .then(res => {
+          if (res.ok) {
+            fetchAssignments();
+            setMessage("Assignment deleted.");
+          } else {
+            setMessage("Delete error. "+res.status);
+            console.error('Delete error =' + res.status);
+      }
+      })
+      .catch(err => console.error(err));
+    }
+
+    const handleForceDelete = (idx) => {
+      console.log("handleForceDelete "+idx);
+      fetch(`${SERVER_URL}/assignment/${idx}/?force=yes`,
+        { method: 'DELETE'})
+      .then(res => {
+          if (res.ok) {
+            fetchAssignments();
+            setMessage("Assignment deleted.");
+          } else {
+            setMessage("Delete error. "+res.status);
+            console.error('Delete error =' + res.status);
+      }
+      })
+      .catch(err => console.error(err));
+    }
   
-    const headers = ['Assignment Name', 'Course Title', 'Due Date', ' ', ' ', ' '];
+    const headers = ['ID', 'Assignment Name', 'Course Title', 'Due Date', ' ', ' ', ' ', ' '];
     
     return (
       <div>
@@ -41,18 +72,30 @@ function ListAssignment(props) {
                 <tbody>
                   {assignments.map((row, idx) => (
                     <tr key={idx}>
+                      <td>{row.id}</td>
                       <td>{row.assignmentName}</td>
                       <td>{row.courseTitle}</td>
                       <td>{row.dueDate}</td>
                       <td>
                         <Link to={`/gradeAssignment/${assignments[idx].id}`} >Grade</Link>
                       </td>
-                      <td>Edit</td>
-                      <td>Delete</td>
+                      <td>
+                        <Link to={`/editAssignment/${row.id}`} >Edit</Link>
+                      </td>
+                      <td>
+                        <button onClick={() => handleDelete(row.id)}>Delete</button>
+                      </td>
+                      <td>
+                        <button onClick={() => handleForceDelete(row.id)}>Force Delete</button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+          </div>
+          <div>
+            <br/>
+            <Link to={`/addAssignment`} >Add Assignment</Link>
           </div>
       </div>
     )
