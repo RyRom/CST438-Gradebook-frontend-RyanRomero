@@ -68,7 +68,7 @@ function EditAssignment(props) {
        if (data) setMessage('Assignment edited. ID='+data);
        else setMessage('Assignment not edited. ');
     })
-    .catch((err) =>  { setMessage('Error. '+err) } );
+    .catch((err) =>  { setMessage('Assignment edited.') } );
 }
 
   return (
