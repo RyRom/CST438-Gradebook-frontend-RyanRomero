@@ -16,6 +16,8 @@ function EditAssignment(props) {
   const [assignment, setAssignment] = useState({assignmentName:'', dueDate:'', courseName:'', courseId:''});
   const [message, setMessage] = useState('');
 
+  const token = sessionStorage.getItem("jwt");
+
   console.log("EditAssignment props="+props);
 
   useEffect(() => {
@@ -54,7 +56,8 @@ function EditAssignment(props) {
     fetch(`${SERVER_URL}/assignment/${s}`, 
         {  
         method: 'PUT', 
-        headers: { 'Content-Type': 'application/json', }, 
+        headers: { 'Content-Type': 'application/json', 
+                   'Authorization': token}, 
         body: JSON.stringify(
           { 
             assignmentName: assignment.assignmentName,
@@ -77,7 +80,7 @@ function EditAssignment(props) {
           <DialogTitle>New Assignment</DialogTitle>
           <DialogContent  style={{paddingTop: 20}} >
             <h4>{message}</h4>
-            <TextField autoFocus fullWidth label="assignmentName" name="assignmentName" onChange={handleChange}  /> 
+            <TextField autoFocus fullWidth id="assignmentName" label="assignmentName" name="assignmentName" onChange={handleChange}  /> 
             <TextField fullWidth label="dueDate" name="dueDate" onChange={handleChange}  />
           </DialogContent>
           <DialogActions>

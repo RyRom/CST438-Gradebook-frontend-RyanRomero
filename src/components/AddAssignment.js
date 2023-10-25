@@ -14,6 +14,8 @@ function AddAssignment(props) {
   const [assignment, setAssignment] = useState({assignmentName:'', dueDate:'', courseName:'', courseId:''});
   const [message, setMessage] = useState('');
 
+  const token = sessionStorage.getItem("jwt");
+
   console.log("AddAssignment props="+props);
 
   const handleClickOpen = () => {
@@ -40,7 +42,8 @@ function AddAssignment(props) {
     fetch(`${SERVER_URL}/assignment`, 
         {  
         method: 'POST', 
-        headers: { 'Content-Type': 'application/json', }, 
+        headers: { 'Content-Type': 'application/json', 
+                   'Authorization': token}, 
         body: JSON.stringify(
           { 
             assignmentName: assignment.assignmentName,
@@ -61,7 +64,7 @@ function AddAssignment(props) {
 
   return (
     <div>
-      <Button variant="outlined" color="primary" style={{margin: 10}} onClick={handleClickOpen}>
+      <Button id="addAdd" variant="outlined" color="primary" style={{margin: 10}} onClick={handleClickOpen}>
         New Assignment
       </Button>
       <Button variant="outlined" color="primary" style={{margin: 10}} onClick={handleGoHome}>
@@ -72,10 +75,10 @@ function AddAssignment(props) {
           <DialogTitle>New Assignment</DialogTitle>
           <DialogContent  style={{paddingTop: 20}} >
             <h4>{message}</h4>
-            <TextField autoFocus fullWidth label="assignmentName" name="assignmentName" onChange={handleChange}  /> 
-            <TextField fullWidth label="courseName" name="courseName" onChange={handleChange}  /> 
-            <TextField fullWidth label="dueDate" name="dueDate" onChange={handleChange}  />
-            <TextField fullWidth label="courseId" name="courseId" onChange={handleChange}  />
+            <TextField autoFocus fullWidth id="assignmentName" label="assignmentName" name="assignmentName" onChange={handleChange}  /> 
+            <TextField fullWidth id="courseName" label="courseName" name="courseName" onChange={handleChange}  /> 
+            <TextField fullWidth id="dueDate" label="dueDate" name="dueDate" onChange={handleChange}  />
+            <TextField fullWidth id="courseId" label="courseId" name="courseId" onChange={handleChange}  />
           </DialogContent>
           <DialogActions>
             <Button color="secondary" onClick={handleClose}>Close</Button>

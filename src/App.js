@@ -4,6 +4,7 @@ import ListAssignment from './components/ListAssignment';
 import GradeAssignment from './components/GradeAssignment';
 import EditAssignment from './components/EditAssignment';
 import AddAssignment from './components/AddAssignment';
+import Login from './components/Login';
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
       <BrowserRouter>
           <div>
             <Switch>
-              <Route exact path="/" component={ListAssignment} />
+              <Route exact path="/" component={Login} />
               <Route path="/gradeAssignment" component={GradeAssignment} />
               <Route path='/editAssignment' component={EditAssignment} />
               <Route path='/addAssignment' component={AddAssignment} />

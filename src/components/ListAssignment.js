@@ -8,6 +8,14 @@ function ListAssignment(props) {
     const [assignments, setAssignments] = useState([]);
     const [message, setMessage] = useState('');
 
+    const token = sessionStorage.getItem("jwt");
+
+    // const f1 = () => { fetchAssignments(); }
+    // useEffect(f1, []);
+
+    // useEffect(fetchAssignments, [])
+    // useEffect(() => fetchAssignments(), []) - passes results of fetchAssignments to useEffect
+
     useEffect(() => {
     // called once after intial render
     fetchAssignments();
@@ -15,7 +23,10 @@ function ListAssignment(props) {
   
     const fetchAssignments = () => {
       console.log("fetchAssignments");
-      fetch(`${SERVER_URL}/assignment`)
+      fetch(`${SERVER_URL}/assignment`, {
+        headers: { 'Authorization': token }
+      }
+      )
       .then((response) => response.json() ) 
       .then((data) => { 
         console.log("assignment length "+data.length);
@@ -27,7 +38,9 @@ function ListAssignment(props) {
     const handleDelete = (idx) => {
       console.log("handleDelete "+idx);
       fetch(`${SERVER_URL}/assignment/${idx}`,
-        { method: 'DELETE'})
+        { method: 'DELETE',
+          headers: { 'Authorization': token }
+        })
       .then(res => {
           if (res.ok) {
             fetchAssignments();
@@ -43,7 +56,8 @@ function ListAssignment(props) {
     const handleForceDelete = (idx) => {
       console.log("handleForceDelete "+idx);
       fetch(`${SERVER_URL}/assignment/${idx}/?force=yes`,
-        { method: 'DELETE'})
+        { method: 'DELETE',
+          headers: { 'Authorization': token }})
       .then(res => {
           if (res.ok) {
             fetchAssignments();
@@ -80,13 +94,13 @@ function ListAssignment(props) {
                         <Link to={`/gradeAssignment/${assignments[idx].id}`} >Grade</Link>
                       </td>
                       <td>
-                        <Link to={`/editAssignment/${row.id}`} >Edit</Link>
+                        <Link id="editButton" to={`/editAssignment/${row.id}`} >Edit</Link>
                       </td>
                       <td>
                         <button onClick={() => handleDelete(row.id)}>Delete</button>
                       </td>
                       <td>
-                        <button onClick={() => handleForceDelete(row.id)}>Force Delete</button>
+                        <button id="forceDelete" onClick={() => handleForceDelete(row.id)}>Force Delete</button>
                       </td>
                     </tr>
                   ))}
@@ -95,7 +109,7 @@ function ListAssignment(props) {
           </div>
           <div>
             <br/>
-            <Link to={`/addAssignment`} >Add Assignment</Link>
+            <Link id="addButton" to={`/addAssignment`} >Add Assignment</Link>
           </div>
       </div>
     )
